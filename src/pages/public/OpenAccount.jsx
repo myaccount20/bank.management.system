@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   generateAccountNumber,
@@ -7,10 +7,9 @@ import {
   saveCard,
   generateCardNumber,
   generateCVV,
-  getUserByAccountNumber,
   saveNotification,
 } from '../../utils/storage';
-import { validateEmail, validatePhone, validatePIN, generateId } from '../../utils/helpers';
+import { validateEmail, validatePhone, validatePIN, validateName, generateId } from '../../utils/helpers';
 import './Auth.css';
 
 const OpenAccount = () => {
@@ -27,33 +26,59 @@ const OpenAccount = () => {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const [accountNumber, setAccountNumber] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    let newValue = value;
+
+    if (name === 'name') {
+      newValue = value.replace(/[^a-zA-Z\s]/g, '');
+    } else if (name === 'phone') {
+      newValue = value.replace(/[^0-9]/g, '').slice(0, 10);
+    } else if (name === 'pin' || name === 'confirmPin') {
+      newValue = value.replace(/[^0-9]/g, '').slice(0, 4);
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: newValue,
     });
-    if (errors[e.target.name]) {
+
+    if (errors[name]) {
       setErrors({
         ...errors,
-        [e.target.name]: '',
+        [name]: '',
       });
     }
   };
 
+  useEffect(() => {
+    const isValid =
+      validateName(formData.name) &&
+      validateEmail(formData.email) &&
+      validatePhone(formData.phone) &&
+      parseFloat(formData.initialDeposit) >= 1000 &&
+      validatePIN(formData.pin) &&
+      formData.pin === formData.confirmPin;
+
+    setIsFormValid(isValid);
+  }, [formData]);
+
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!validateName(formData.name)) {
+      newErrors.name = 'Name must contain only letters and spaces';
     }
 
     if (!validateEmail(formData.email)) {
-      newErrors.email = 'Valid email is required';
+      newErrors.email = 'Email must end with @gmail.com';
     }
 
     if (!validatePhone(formData.phone)) {
-      newErrors.phone = 'Valid 10-digit phone number is required';
+      newErrors.phone = 'Phone must be exactly 10 digits';
     }
 
     if (!formData.initialDeposit || parseFloat(formData.initialDeposit) < 1000) {
@@ -61,7 +86,7 @@ const OpenAccount = () => {
     }
 
     if (!validatePIN(formData.pin)) {
-      newErrors.pin = 'PIN must be 4 digits';
+      newErrors.pin = 'PIN must be exactly 4 digits';
     }
 
     if (formData.pin !== formData.confirmPin) {
@@ -126,7 +151,7 @@ const OpenAccount = () => {
     saveNotification({
       id: generateId(),
       userId: userId,
-      title: 'Welcome to SecureBank!',
+      title: 'Welcome to SecureBank',
       message: 'Your account has been created successfully.',
       date: now,
       read: false,
@@ -146,24 +171,44 @@ const OpenAccount = () => {
     });
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(accountNumber);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   if (success) {
     return (
       <div className="auth-page">
         <div className="container">
           <div className="auth-container">
             <div className="success-message">
-              <div className="success-icon">✓</div>
-              <h2>Account Created Successfully!</h2>
-              <p>Your account number is:</p>
-              <div className="account-number-display">{accountNumber}</div>
-              <p className="info-text">
-                Please save this account number. You will need it along with your PIN to login.
+              <div className="success-checkmark">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  <circle cx="40" cy="40" r="38" stroke="#059669" strokeWidth="4" fill="none"/>
+                  <path d="M25 40L35 50L55 30" stroke="#059669" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h2>Account Created Successfully</h2>
+              <p className="success-subtitle">Your account number:</p>
+              <div className="account-number-box">
+                <div className="account-number-value">{accountNumber}</div>
+                <button onClick={handleCopy} className="copy-button" title="Copy to clipboard">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+              {copied && <p className="copy-success">Copied to clipboard</p>}
+              <p className="info-notice">
+                Please save this account number securely. You will need it along with your PIN to login.
               </p>
               <button
                 onClick={() => navigate('/login')}
                 className="btn btn-primary btn-block"
               >
-                Go to Login
+                Continue to Login
               </button>
             </div>
           </div>
@@ -177,7 +222,7 @@ const OpenAccount = () => {
       <div className="container">
         <div className="auth-container">
           <h1>Open a New Account</h1>
-          <p className="subtitle">Join SecureBank today and start banking with confidence</p>
+          <p className="subtitle">Join SecureBank and experience modern banking</p>
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="input-group">
@@ -199,7 +244,7 @@ const OpenAccount = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter your email"
+                placeholder="yourname@gmail.com"
               />
               {errors.email && <span className="error">{errors.email}</span>}
             </div>
@@ -207,12 +252,11 @@ const OpenAccount = () => {
             <div className="input-group">
               <label>Phone Number *</label>
               <input
-                type="tel"
+                type="text"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="10-digit phone number"
-                maxLength="10"
               />
               {errors.phone && <span className="error">{errors.phone}</span>}
             </div>
@@ -252,7 +296,6 @@ const OpenAccount = () => {
                 value={formData.pin}
                 onChange={handleChange}
                 placeholder="4-digit PIN"
-                maxLength="4"
               />
               {errors.pin && <span className="error">{errors.pin}</span>}
             </div>
@@ -265,12 +308,15 @@ const OpenAccount = () => {
                 value={formData.confirmPin}
                 onChange={handleChange}
                 placeholder="Re-enter PIN"
-                maxLength="4"
               />
               {errors.confirmPin && <span className="error">{errors.confirmPin}</span>}
             </div>
 
-            <button type="submit" className="btn btn-primary btn-block">
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={!isFormValid}
+            >
               Create Account
             </button>
 

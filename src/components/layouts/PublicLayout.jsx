@@ -16,8 +16,7 @@ const PublicLayout = () => {
         <div className="container">
           <div className="nav-content">
             <Link to="/" className="logo">
-              <span className="logo-icon">🏦</span>
-              <span className="logo-text">SecureBank</span>
+              <span className="logo-text">SECUREBANK</span>
             </Link>
 
             <div className="nav-links">
@@ -28,7 +27,7 @@ const PublicLayout = () => {
               <Link to="/open-account" className="btn btn-primary">Open Account</Link>
               <Link to="/login" className="btn btn-secondary">Login</Link>
               <button onClick={toggleTheme} className="theme-toggle" title="Toggle theme">
-                {theme === 'light' ? '🌙' : '☀️'}
+                {theme === 'light' ? 'Dark' : 'Light'}
               </button>
             </div>
           </div>
