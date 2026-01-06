@@ -36,7 +36,6 @@ const Dashboard = () => {
 
       <div className="dashboard-grid">
         <div className="stat-card-large">
-          <div className="stat-icon">💰</div>
           <div>
             <div className="stat-label">Total Balance</div>
             <div className="stat-value">{formatCurrency(totalBalance)}</div>
@@ -44,7 +43,6 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card-large">
-          <div className="stat-icon">💳</div>
           <div>
             <div className="stat-label">Active Accounts</div>
             <div className="stat-value">{accounts.length}</div>
@@ -52,7 +50,6 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card-large">
-          <div className="stat-icon">📊</div>
           <div>
             <div className="stat-label">Transactions</div>
             <div className="stat-value">{transactions.length}</div>
@@ -60,7 +57,6 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card-large">
-          <div className="stat-icon">🔔</div>
           <div>
             <div className="stat-label">Unread Alerts</div>
             <div className="stat-value">{notifications.length}</div>

@@ -63,7 +63,7 @@ export const isSessionExpired = (lastActivity, timeoutMinutes = 10) => {
 };
 
 export const validateEmail = (email) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const re = /^[^\s@]+@gmail\.com$/;
   return re.test(email);
 };
 
@@ -75,6 +75,11 @@ export const validatePhone = (phone) => {
 export const validatePIN = (pin) => {
   const re = /^[0-9]{4}$/;
   return re.test(pin);
+};
+
+export const validateName = (name) => {
+  const re = /^[a-zA-Z\s]+$/;
+  return re.test(name) && name.trim().length > 0;
 };
 
 export const generateId = () => {
