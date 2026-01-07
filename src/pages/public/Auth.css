@@ -60,23 +60,35 @@
   text-align: center;
 }
 
-.success-icon {
-  width: 80px;
-  height: 80px;
-  background-color: var(--success);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
+.success-checkmark {
+  width: 100px;
+  height: 100px;
   margin: 0 auto 1.5rem;
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .success-message h2 {
   font-size: 1.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: var(--text-primary);
+}
+
+.success-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-size: 0.9375rem;
 }
 
 .success-message p {
@@ -84,19 +96,68 @@
   margin-bottom: 1rem;
 }
 
-.account-number-display {
-  background-color: var(--bg-tertiary);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin: 1rem 0;
-  letter-spacing: 2px;
+.account-number-box {
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid var(--primary);
+  margin: 1.5rem 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }
 
-.info-text {
+.account-number-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 3px;
+  font-family: 'Courier New', monospace;
+}
+
+.copy-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.copy-success {
+  color: var(--success);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.info-notice {
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid var(--warning);
   color: var(--warning);
+  padding: 1rem;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
   margin: 1rem 0 2rem;
   font-weight: 500;

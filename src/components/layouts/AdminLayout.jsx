@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import './DashboardLayout.css';
+import './AdminLayout.css';
 
 const AdminLayout = () => {
   const { logout } = useAuth();
@@ -19,20 +19,20 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="dashboard-layout">
-      <aside className="sidebar open">
-        <div className="sidebar-header">
-          <Link to="/admin" className="sidebar-logo">
-            <span className="logo-text">ADMIN</span>
+    <div className="admin-layout">
+      <aside className="admin-sidebar">
+        <div className="admin-sidebar-header">
+          <Link to="/admin" className="admin-logo">
+            <span className="admin-logo-icon">ADMIN PORTAL</span>
           </Link>
         </div>
 
-        <nav className="sidebar-nav">
+        <nav className="admin-sidebar-nav">
           <Link to="/admin" className={isActive('/admin')}>
             <span>Dashboard</span>
           </Link>
           <Link to="/admin/users" className={isActive('/admin/users')}>
-            <span>Users</span>
+            <span>User Management</span>
           </Link>
           <Link to="/admin/transactions" className={isActive('/admin/transactions')}>
             <span>Transactions</span>
@@ -42,26 +42,24 @@ const AdminLayout = () => {
           </Link>
         </nav>
 
-        <div className="sidebar-footer">
-          <button onClick={handleLogout} className="logout-btn">
+        <div className="admin-sidebar-footer">
+          <button onClick={handleLogout} className="admin-logout-btn">
             <span>Logout</span>
           </button>
         </div>
       </aside>
 
-      <div className="dashboard-main">
-        <header className="dashboard-header">
-          <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-primary)' }}>
-            SecureBank Admin
-          </h2>
-          <div className="header-right">
-            <button onClick={toggleTheme} className="theme-toggle">
+      <div className="admin-main">
+        <header className="admin-header">
+          <h2>SecureBank Administration</h2>
+          <div className="admin-header-right">
+            <button onClick={toggleTheme} className="admin-theme-toggle">
               {theme === 'light' ? 'Dark' : 'Light'}
             </button>
           </div>
         </header>
 
-        <div className="dashboard-content">
+        <div className="admin-content-wrapper">
           <Outlet />
         </div>
       </div>
