@@ -3,6 +3,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { useEffect } from 'react';
 import { initializeStorage } from './utils/storage';
+import { seedDemoData } from './utils/seedData';
 
 import PublicLayout from './components/layouts/PublicLayout';
 import DashboardLayout from './components/layouts/DashboardLayout';
@@ -54,6 +55,7 @@ const AdminRoute = ({ children }) => {
 function AppRoutes() {
   useEffect(() => {
     initializeStorage();
+    seedDemoData();
   }, []);
 
   return (
